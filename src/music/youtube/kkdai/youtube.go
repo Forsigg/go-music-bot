@@ -7,6 +7,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"tg-music-bot/config"
 	"tg-music-bot/src/music"
 )
 
@@ -25,8 +26,10 @@ func (y *KdaiYTMusic) DownloadById(id string) (music.FileName, error) {
 		return "", err
 	}
 	videoName, _ := uuid.NewUUID()
+	videoFileName := config.GetWorkdirFromOsEnv() + "/" + videoName.String() + ".mp4"
+	musicFileName := music.FileName(config.GetWorkdirFromOsEnv() + "/" + videoName.String() + ".mp3")
 
-	file, err := os.Create(videoName.String() + ".mp4")
+	file, err := os.Create(videoFileName)
 	if err != nil {
 		return "", err
 	}
@@ -36,11 +39,11 @@ func (y *KdaiYTMusic) DownloadById(id string) (music.FileName, error) {
 		return "", err
 	}
 
-	err = ffmpeg_go.Input(videoName.String()+".mp4").Audio().OverWriteOutput().Output(
-		videoName.String()+".mp3", ffmpeg_go.KwArgs{"ac": 2}).Run()
+	err = ffmpeg_go.Input(videoFileName).Audio().OverWriteOutput().Output(
+		string(musicFileName), ffmpeg_go.KwArgs{"ac": 2}).Run()
 
 	log.Println(err)
 
-	musicFileName := music.FileName(videoName.String() + ".mp3")
+	//musicFileName := music.FileName(config.Workdir + "/" + videoName.String() + ".mp3")
 	return musicFileName, nil
 }

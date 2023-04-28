@@ -45,7 +45,7 @@ func (b *Bot) Serve() {
 			time.Sleep(2 * time.Second)
 		}
 		for _, update := range updates {
-			fmt.Println(update.Id, update.Message.From.Username, update.Message.Text)
+			log.Println(update.Id, update.Message.From.Username, update.Message.Text)
 			go b.processUpdate(update)
 			offset = update.Id + 1
 		}
@@ -102,11 +102,11 @@ func uploadFile(url string, values map[string]io.Reader) (err error) {
 
 		if x, ok := r.(*os.File); ok {
 			if fw, err = w.CreateFormFile(key, x.Name()); err != nil {
-				return
+				return err
 			}
 		} else {
 			if fw, err = w.CreateFormField(key); err != nil {
-				return
+				return err
 			}
 		}
 		if _, err = io.Copy(fw, r); err != nil {
@@ -114,7 +114,10 @@ func uploadFile(url string, values map[string]io.Reader) (err error) {
 		}
 
 	}
-	w.Close()
+	err = w.Close()
+	if err != nil {
+		return err
+	}
 
 	req, err := http.NewRequest("POST", url, &b)
 	if err != nil {
@@ -125,7 +128,7 @@ func uploadFile(url string, values map[string]io.Reader) (err error) {
 	client := http.Client{}
 	res, err := client.Do(req)
 	if err != nil {
-		return
+		return err
 	}
 
 	if res.StatusCode != http.StatusOK {
