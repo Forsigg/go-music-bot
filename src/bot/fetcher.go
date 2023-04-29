@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/url"
 	"strconv"
+	types "tg-music-bot/src/telegram_types"
 )
 
 const TgApiUrl string = "https://api.telegram.org/bot"
@@ -14,7 +15,7 @@ const TgApiUrl string = "https://api.telegram.org/bot"
 type Fetcher struct {
 }
 
-func (f *Fetcher) Fetch(token string, offset int) []Update {
+func (f *Fetcher) Fetch(token string, offset int) []types.Update {
 	return f.ParseUpdates(f.makeRequest(token, offset))
 }
 
@@ -32,8 +33,8 @@ func (f *Fetcher) makeRequest(token string, offset int) []byte {
 	return body
 }
 
-func (f *Fetcher) ParseUpdates(respBody []byte) []Update {
-	var result ResponseResult
+func (f *Fetcher) ParseUpdates(respBody []byte) []types.Update {
+	var result types.ResponseResult
 	err := json.Unmarshal(respBody, &result)
 	if err != nil {
 		log.Printf("Error while parsing json: %s", err)

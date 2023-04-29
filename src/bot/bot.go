@@ -12,23 +12,27 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"tg-music-bot/src/database"
 	"tg-music-bot/src/music"
+	types "tg-music-bot/src/telegram_types"
 	"time"
 )
 
 type Bot struct {
 	token   string
 	fetcher Fetcher
+	db      database.Database
 }
 
-func NewBot(token string, fetcher Fetcher) *Bot {
+func NewBot(token string, fetcher Fetcher, db database.Database) *Bot {
 	return &Bot{
 		token:   token,
 		fetcher: fetcher,
+		db:      db,
 	}
 }
 
-func (b *Bot) processUpdate(upd Update) {
+func (b *Bot) processUpdate(upd types.Update) {
 	if upd.Message.IsCommand() {
 		handleCommand(upd, b)
 	} else {
@@ -52,7 +56,7 @@ func (b *Bot) Serve() {
 	}
 }
 
-func (b *Bot) sendAudio(msg Message, file music.FileName, trackName string) {
+func (b *Bot) sendAudio(msg types.Message, file music.FileName, trackName string) {
 	u := b.buildUrl(sendAudioMethod)
 
 	values := map[string]io.Reader{
@@ -65,10 +69,10 @@ func (b *Bot) sendAudio(msg Message, file music.FileName, trackName string) {
 	log.Println(err)
 }
 
-func (b *Bot) sendMessage(msg Message, text string) {
+func (b *Bot) sendMessage(chatId int, text string) {
 	u := b.buildUrl(sendMessageMethod)
 	values := map[string]string{
-		"chat_id": strconv.Itoa(msg.Chat.Id),
+		"chat_id": strconv.Itoa(chatId),
 		"text":    text,
 	}
 
