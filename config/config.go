@@ -39,11 +39,6 @@ func GetWorkdirFromOsEnv() string {
 }
 
 func configPath() string {
-	//dir := filepath.Join("home")
-	//dir, err := os.Getwd()
-	//if err != nil {
-	//	log.Printf("Error while get current working directory: %s", err)
-	//}
 	workDir := GetWorkdirFromOsEnv()
 	dir := filepath.Join(workDir, "config", ".env")
 	return dir
