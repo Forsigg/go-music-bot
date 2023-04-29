@@ -28,6 +28,7 @@ func NewSQLiteDB(dbFile string) (*SQLiteDB, error) {
 	return &db, nil
 }
 
+// GetAllUsers func that return all users from database
 func (db *SQLiteDB) GetAllUsers() ([]types.User, error) {
 	rows, err := db.db.Query(allUsersSQL)
 	if err != nil {
@@ -50,6 +51,7 @@ func (db *SQLiteDB) GetAllUsers() ([]types.User, error) {
 	return users, nil
 }
 
+// GetUserById func that return user from DB by id in arg
 func (db *SQLiteDB) GetUserById(id int) (types.User, error) {
 	var u types.User
 	row, err := db.db.Query(userByIdSQL, id)
@@ -65,6 +67,7 @@ func (db *SQLiteDB) GetUserById(id int) (types.User, error) {
 	return u, nil
 }
 
+// AddUser func that create user in DB drom user struct in arg
 func (db *SQLiteDB) AddUser(user types.User) error {
 	stmt, err := db.db.Prepare(addUserSQL)
 	if err != nil {
