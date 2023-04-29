@@ -13,6 +13,8 @@ import (
 
 type KdaiYTMusic struct{}
 
+// DownloadById implements YTDownload interface method. Download video by id in arg,
+// create file with uuid name, convert it in mp3 and return filename
 func (y *KdaiYTMusic) DownloadById(id string) (music.FileName, error) {
 
 	client := ytDownload.Client{}
@@ -44,6 +46,5 @@ func (y *KdaiYTMusic) DownloadById(id string) (music.FileName, error) {
 
 	log.Println(err)
 
-	//musicFileName := music.FileName(config.Workdir + "/" + videoName.String() + ".mp3")
 	return musicFileName, nil
 }

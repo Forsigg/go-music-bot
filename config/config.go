@@ -8,10 +8,12 @@ import (
 	"strings"
 )
 
+// LoadConfig reading config file and set os envs
 func LoadConfig() {
 	readConfigFile(configPath())
 }
 
+// readConfigFile reading config file
 func readConfigFile(configPath string) {
 	file, err := os.Open(configPath)
 	if err != nil {
@@ -34,21 +36,19 @@ func readConfigFile(configPath string) {
 	}
 }
 
+// GetWorkdirFromOsEnv return string that contain path to project dir
 func GetWorkdirFromOsEnv() string {
 	return os.Getenv("WORKDIR")
 }
 
+// configPath return string that contain path to config file
 func configPath() string {
-	//dir := filepath.Join("home")
-	//dir, err := os.Getwd()
-	//if err != nil {
-	//	log.Printf("Error while get current working directory: %s", err)
-	//}
 	workDir := GetWorkdirFromOsEnv()
 	dir := filepath.Join(workDir, "config", ".env")
 	return dir
 }
 
+// parseConfigLine separate file line by = and return key and value
 func parseConfigLine(line string) (string, string) {
 	configLine := strings.Split(line, "=")
 	varr := configLine[0]

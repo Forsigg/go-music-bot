@@ -1,4 +1,4 @@
-package bot
+package telegram_types
 
 import "strings"
 
